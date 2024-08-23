@@ -7,20 +7,23 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 @Aspect
 @Component
 @Slf4j
-public class TimeAspect {
+public class TimePrintAspect {
 
-    @Pointcut("@annotation(com.study.SpringSecurity.aspect.annotation.ParamsAop)")
+    @Pointcut("@annotation(com.study.SpringSecurity.aspect.annotation.TimeAop)")
     private void pointCut() {}
 
     @Around("pointCut()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         CodeSignature signature = (CodeSignature) proceedingJoinPoint.getSignature();
-        String[] paramNames = signature.getParameterNames();
-        Object[] args = proceedingJoinPoint.getArgs();
+        StopWatch stopWatch = new StopWatch(); // StopWatch - 스프링 안에 들어있는 객체
+        stopWatch.start(); // stopWatch 실행 부가기능
+        Object result = proceedingJoinPoint.proceed(); // 핵심기능
+        stopWatch.stop(); // stopWatch 정지 부가기능
 
         String infoPrint = "ClassName(" + signature.getDeclaringType().getSimpleName() + ") MethodName (" + signature.getName() + ")";
         String linePrint = "";
@@ -29,14 +32,10 @@ public class TimeAspect {
         }
         log.info("{}", linePrint);
         log.info("{}", infoPrint);
-                // signature.getDeclaringType().getSimpleName()
-                // signature 에 들어있는 getDeclaringType(클레스타입) 클레스 getSimpleName 클레스 이름만 가지고 와라
-        for(int i = 0; i < paramNames.length; i++) {
-            log.info("{} >>>> {}", paramNames[i], args[i]);
-        }
+        log.info("Time : {}초", stopWatch.getTotalTimeSeconds());
         log.info("{}", linePrint);
 
-        return proceedingJoinPoint.proceed();
+        return result;
 
     }
 }

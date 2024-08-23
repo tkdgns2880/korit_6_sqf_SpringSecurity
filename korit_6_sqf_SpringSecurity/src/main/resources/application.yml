@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:auth_db
+    url: jdbc:h2:file:./data/auth_db;
     driver-class-name: org.h2.Driver
     # External Libraries -> Maver:com.h2database -> org.h2.Driver 설정해준다
     username: sa
@@ -9,9 +9,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      # update - 기존 데이터를 남겨두고 수정만 하겠다
+      # create - 기존의 데이터를 다 날리고 나서 새로 만들겠다
     show-sql: true
 
   h2:
     console:
       enabled: true
       path: /h2-console
+
+# jwt의 비밀번호 정의
+jwt:
+  secret: 98fd86210078e48118afa36fa93a80849b9773552bb6f900248f0d2a0f30e7fe09abcae164675e1d50ec4cd534cefa64bb635d47d54fc5c42c91aa05b90398567630eef893b0f12947fa2d990e46ac55a3dd316ba9bbfad0341caa293c2a77c4163bbf902ab1e6e313e27fa7e5eeb4833a4950580536f99cf7574bac2312acf58461a869cf09fe96bd977f9deb7c0535e2342b80686a87fed303d4469d19092e182f570bbc74f36ca98e07e087a6625ec09ad1ffdf4b6616cbfdc1a7e28b22310ae83500df45a3eb9fbabcafe0ce29d3fd25c76e27481506e32bb86a3e67f3e3923470f34ea3b3348ee1a774bedbc7798fdf8b98734ed0346cfb3d13a990f2ff
